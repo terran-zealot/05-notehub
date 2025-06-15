@@ -60,7 +60,7 @@ export async function fetchNotes({
   });
 
   const raw = response.data;
-  console.log('📦 Сира відповідь:', raw);
+
 
   return {
     results: raw.notes,
