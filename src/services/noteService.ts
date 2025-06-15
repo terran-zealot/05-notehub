@@ -1,5 +1,5 @@
 import axios, {type AxiosResponse } from 'axios';
-import { type Note, type NoteTag } from '../types/note';
+import { type Note } from '../types/note';
 
 const BASE_URL = 'https://notehub-public.goit.study/api/notes';
 const BEARER_TOKEN = import.meta.env.VITE_SUPER_PASSWORD;
@@ -15,7 +15,7 @@ export interface FetchNotesParams {
 }
 
 export interface FetchNotesResponse {
-  results: Note[];
+  notes: Note[];
   totalPages: number;
   page: number;
 }
@@ -23,51 +23,16 @@ export interface FetchNotesResponse {
 export interface CreateNoteParams {
   title: string;
   content: string;
-  tag: NoteTag;
+  tag: 'Todo' | 'Work' | 'Personal' | 'Meeting' | 'Shopping';
 }
 
-// export async function fetchNotes({
-//   page = 1,
-//   perPage = 12,
-//   search = '',
-// }: FetchNotesParams): Promise<FetchNotesResponse> {
-//   const params: Record<string, string | number> = {
-//     page,
-//     perPage,
-//   };
-
-//   if (search.trim()) {
-//     params.search = search.trim();
-//   }
-
-//   const response: AxiosResponse<FetchNotesResponse> = await axios.get(BASE_URL, {
-//     headers: {
-//       Authorization: `Bearer ${BEARER_TOKEN}`,
-//     },
+// export async function fetchNotes(params: FetchNotesParams): Promise<FetchNotesResponse> {
+//   const response = await axios.get(BASE_URL, {
+//     headers,
 //     params,
 //   });
-
 //   return response.data;
 // }
-export async function fetchNotes({
-  page = 1,
-  // search = '',
-  perPage = 12,
-}: FetchNotesParams): Promise<FetchNotesResponse> {
-  const response = await axios.get(BASE_URL, {
-    headers,
-    params: { page, perPage,  },
-  });
-
-  const raw = response.data;
-
-
-  return {
-    results: raw.notes,
-    totalPages: raw.totalPages,
-    page,
-  };
-}
 
 
 export async function createNote(note: CreateNoteParams): Promise<Note> {
@@ -75,9 +40,39 @@ export async function createNote(note: CreateNoteParams): Promise<Note> {
   return response.data;
 }
 
-export async function deleteNote(id: string): Promise<Note> {
-  const response: AxiosResponse<Note> = await axios.delete(`${BASE_URL}/${id}`, {
-    headers,
+export async function deleteNote(id: number): Promise<Note> {
+  const response = await axios.delete(`${BASE_URL}/${id}`, { headers });
+  return response.data;
+}
+
+
+
+
+
+
+
+
+
+export async function fetchNotes({
+  page = 1,
+  perPage = 12,
+  search = '',
+}: FetchNotesParams): Promise<FetchNotesResponse> {
+  const params: Record<string, string | number> = {
+    page,
+    perPage,
+  };
+
+  if (search.trim()) {
+    params.search = search.trim();
+  }
+
+  const response: AxiosResponse<FetchNotesResponse> = await axios.get(BASE_URL, {
+    headers: {
+      Authorization: `Bearer ${BEARER_TOKEN}`,
+    },
+    params,
   });
+
   return response.data;
 }

@@ -5,12 +5,23 @@ import SearchBox from '../SearchBox/SearchBox';
 import Pagination from '../Pagination/Paginaytion';
 import NoteList from '../NoteList/NoteList';
 import NoteModal from '../NoteModal/NoteModal';
+import { useQuery, keepPreviousData } from '@tanstack/react-query';
+import { fetchNotes, type FetchNotesResponse } from '../../services/noteService';
 
 export default function App() {
   const [search, setSearch] = useState('');
   const [page, setPage] = useState(1);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [debouncedSearch] = useDebounce(search, 500);
+
+  const { data, isLoading, isError } = useQuery<FetchNotesResponse>({
+    queryKey: ['notes', page, search],
+    queryFn: () => fetchNotes({ page, search, perPage: 12 }),
+    placeholderData: keepPreviousData,
+  });
+
+  if (isLoading) return <p>Loading notes...</p>;
+  if (isError) return <p>Error loading notes.</p>;
 
   return (
     <div className={css.app}>
@@ -22,7 +33,8 @@ export default function App() {
         </button>
       </header>
 	  
-      <NoteList page={page} search={debouncedSearch} />
+      <NoteList notes={data?.notes ?? []} />
+      <Pagination currentPage={page} onPageChange={setPage} search={debouncedSearch} />
 
       {isModalOpen && <NoteModal onClose={() => setIsModalOpen(false)} />}
     </div>
