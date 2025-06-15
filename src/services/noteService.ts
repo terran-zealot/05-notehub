@@ -26,28 +26,47 @@ export interface CreateNoteParams {
   tag: NoteTag;
 }
 
+// export async function fetchNotes({
+//   page = 1,
+//   perPage = 12,
+//   search = '',
+// }: FetchNotesParams): Promise<FetchNotesResponse> {
+//   const params: Record<string, string | number> = {
+//     page,
+//     perPage,
+//   };
+
+//   if (search.trim()) {
+//     params.search = search.trim();
+//   }
+
+//   const response: AxiosResponse<FetchNotesResponse> = await axios.get(BASE_URL, {
+//     headers: {
+//       Authorization: `Bearer ${BEARER_TOKEN}`,
+//     },
+//     params,
+//   });
+
+//   return response.data;
+// }
 export async function fetchNotes({
   page = 1,
+  // search = '',
   perPage = 12,
-  search = '',
 }: FetchNotesParams): Promise<FetchNotesResponse> {
-  const params: Record<string, string | number> = {
-    page,
-    perPage,
-  };
-
-  if (search.trim()) {
-    params.search = search.trim();
-  }
-
-  const response: AxiosResponse<FetchNotesResponse> = await axios.get(BASE_URL, {
-    headers: {
-      Authorization: `Bearer ${BEARER_TOKEN}`,
-    },
-    params,
+  const response = await axios.get(BASE_URL, {
+    headers,
+    params: { page, perPage,  },
   });
 
-  return response.data;
+  const raw = response.data;
+  console.log('📦 Сира відповідь:', raw);
+
+  return {
+    results: raw.notes,
+    totalPages: raw.totalPages,
+    page,
+  };
 }
 
 

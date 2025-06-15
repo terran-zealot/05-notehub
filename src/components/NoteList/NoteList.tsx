@@ -16,6 +16,7 @@ export default function NoteList({ page, search }: NoteListProps) {
     queryFn: () => fetchNotes({ page, perPage: 12, search }),
     placeholderData: (prev) => prev,
   });
+  console.log('Дані з API:', data);
 
   const mutation = useMutation({
     mutationFn: deleteNote,
