@@ -3,24 +3,20 @@ import { keepPreviousData, useQuery } from '@tanstack/react-query';
 import { fetchNotes, type FetchNotesResponse } from '../../services/noteService';
 import css from './Pagination.module.css';
 
+
+
 interface PaginationProps {
   currentPage: number;
   onPageChange: (selected: number) => void;
-  search: string;
+  totalPages: number;
 }
 
 export default function Pagination({
   currentPage,
   onPageChange,
-  search,
+  totalPages,
 }: PaginationProps) {
-  const { data } = useQuery<FetchNotesResponse>({
-    queryKey: ['notes', currentPage, search],
-    queryFn: () => fetchNotes({ page: currentPage, perPage: 12, search }),
-    placeholderData: keepPreviousData,
-  });
-
-  if (!data || data.totalPages <= 1) return null;
+  if (totalPages <= 1) return null;
 
   return (
     <ReactPaginate
@@ -29,7 +25,7 @@ export default function Pagination({
       onPageChange={(event) => onPageChange(event.selected + 1)}
       pageRangeDisplayed={3}
       marginPagesDisplayed={1}
-      pageCount={data.totalPages}
+      pageCount={totalPages}
       previousLabel="<"
       forcePage={currentPage - 1}
       containerClassName={css.pagination}
