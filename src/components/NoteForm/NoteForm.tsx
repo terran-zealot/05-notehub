@@ -43,7 +43,7 @@ export default function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
         });
       }}
     >
-      {({ handleChange, values, errors, isSubmitting }) => (
+      {({ handleChange, values, isSubmitting }) => (
         <Form className={css.form}>
           <div className={css.formGroup}>
             <label htmlFor="title">Title</label>
@@ -61,7 +61,7 @@ export default function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
               onChange={handleChange}
               value={values.content}
             />
-            <span className={css.error}>{errors.content}</span>
+            <ErrorMessage name="content" component="div" className={css.error} />
           </div>
 
           <div className={css.formGroup}>
@@ -80,7 +80,7 @@ export default function NoteForm({ onSuccess, onCancel }: NoteFormProps) {
               <option value="Meeting">Meeting</option>
               <option value="Shopping">Shopping</option>
             </select>
-            <span className={css.error}>{errors.tag}</span>
+            <ErrorMessage name="tag" component="div" className={css.error} />
           </div>
 
           <div className={css.actions}>
