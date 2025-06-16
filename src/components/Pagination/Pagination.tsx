@@ -1,6 +1,6 @@
 import ReactPaginate from 'react-paginate';
-import { keepPreviousData, useQuery } from '@tanstack/react-query';
-import { fetchNotes, type FetchNotesResponse } from '../../services/noteService';
+// import { keepPreviousData, useQuery } from '@tanstack/react-query';
+// import { fetchNotes, type FetchNotesResponse } from '../../services/noteService';
 import css from './Pagination.module.css';
 
 
